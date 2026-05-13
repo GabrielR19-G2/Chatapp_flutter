@@ -1,3 +1,7 @@
+import 'package:chat/widgets/blue_button.dart';
+import 'package:chat/widgets/custom_input.dart';
+import 'package:chat/widgets/labels.dart';
+import 'package:chat/widgets/logo.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatelessWidget {
@@ -11,35 +15,17 @@ class LoginPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _Logo(),
+            Logo(),
 
+            // Form -> Solo es de login.
             _Form(),
-            _Labels(),
+
+            Labels(),
+
             Text(
               "Términos y condiciones de uso",
               style: TextStyle(fontWeight: FontWeight.w200),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _Logo extends StatelessWidget {
-  const _Logo({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.only(top: 50),
-        width: 170,
-        child: Column(
-          children: [
-            Image.asset('assets/tag-logo.png'),
-            SizedBox(height: 20),
-            Text("Messenger", style: TextStyle(fontSize: 20)),
           ],
         ),
       ),
@@ -54,50 +40,34 @@ class _Form extends StatefulWidget {
 }
 
 class __FormState extends State<_Form> {
+  final emailCtrl = TextEditingController();
+  final passCtrl = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(top: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Column(
         children: [
-          TextField(),
-          TextField(),
-          ElevatedButton(
-            onPressed: () {},
-            child: Icon(Icons.join_inner_outlined),
+          CustomInput(
+            icon: Icons.email,
+            placeholder: 'Email',
+            controller: emailCtrl,
+            keyboardType: TextInputType.emailAddress,
           ),
-        ],
-      ),
-    );
-  }
-}
+          CustomInput(
+            icon: Icons.lock_outline,
+            placeholder: 'Password',
+            controller: passCtrl,
+            keyboardType: TextInputType.visiblePassword,
+            isPassword: true,
+          ),
 
-class _Labels extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Text(
-            'No tienes una cuenta?',
-            style: TextStyle(
-              color: Colors.black54,
-              fontSize: 15,
-              fontWeight: FontWeight.w300,
-            ),
-          ),
-          SizedBox(height: 10),
-          GestureDetector(
-            onTap: () {
-              print('navegacion pendiente crea una ahora.');
+          CustomButton(
+            titleButton: 'Ingresar',
+            onPressed: () {
+              print('Email: ${emailCtrl.text}, pass: ${passCtrl.text}');
             },
-            child: Text(
-              'Crea una ahora!',
-              style: TextStyle(
-                color: Colors.blue[600],
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
           ),
         ],
       ),
