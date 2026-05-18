@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:chat/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -10,7 +11,20 @@ class ChatPage extends StatefulWidget {
   State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+// se tiene que sincronizar con el vertical sync. cada uno de los cuadros este sincronizado
+class _ChatPageState extends State<ChatPage> with TickerProviderStateMixin {
+  List<ChatMessage> _messages = [
+    // ChatMessage(text: 'hola mundo!', uid: '123'),
+    // ChatMessage(text: 'hola mundo', uid: '456'),
+    // ChatMessage(text: 'hola mundo', uid: '123'),
+    // ChatMessage(text: 'hola mundo', uid: '456'),
+    // ChatMessage(text: 'hola mundo', uid: '123'),
+    // ChatMessage(text: 'hola mundo', uid: '456'),
+    // ChatMessage(text: 'hola mundo', uid: '123'),
+
+    // ChatMessage(text: 'hola mundo', uid: '456'),
+  ];
+
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
   bool _isWriting = false;
@@ -45,9 +59,9 @@ class _ChatPageState extends State<ChatPage> {
               child: ListView.builder(
                 reverse: true,
                 physics: BouncingScrollPhysics(),
-                // itemCount: 10,
+                itemCount: _messages.length,
                 itemBuilder: (_, int index) {
-                  return Text('Index: $index');
+                  return _messages[index];
                 },
               ),
             ),
@@ -116,10 +130,23 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   _handleSubmit(String text) {
+    if (text.isEmpty) return;
+
     print(text);
     _controller.clear();
     _focusNode.requestFocus();
 
+    final newMsg = ChatMessage(
+      text: text,
+      uid: '123',
+      animationController: AnimationController(
+        vsync: this,
+        duration: const Duration(milliseconds: 400),
+      ),
+    );
+    _messages.insert(0, newMsg);
+    // esto 'dispara' el proceso de la animacion
+    newMsg.animationController.forward();
     setState(() {
       _isWriting = false;
     });
